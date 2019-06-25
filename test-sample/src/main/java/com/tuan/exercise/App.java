@@ -1,7 +1,5 @@
 package com.tuan.exercise;
 
-import com.tuan.exercise.ct_annot.annotation.StaticMethod;
-
 /**
  * Hello world!
  *
@@ -13,7 +11,8 @@ public class App {
 
     // this will produce a compile-time error
     // cause this annotation can only be applied to static method
-    @StaticMethod
+    // uncomment below line and import the class to see the result
+//    @StaticMethod
     public void someMethod() {
 
     }
