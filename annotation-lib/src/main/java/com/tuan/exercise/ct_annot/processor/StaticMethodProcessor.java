@@ -17,42 +17,39 @@ import javax.tools.Diagnostic.Kind;
 
 public class StaticMethodProcessor extends AbstractProcessor {
 
-    private Messager messager;
+	private Messager messager;
 
-    @Override
-    public synchronized void init(ProcessingEnvironment env) {
-        messager = env.getMessager();
-    }
+	@Override
+	public synchronized void init(ProcessingEnvironment env) {
+		messager = env.getMessager();
+	}
 
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations,
-            RoundEnvironment roundEnv) {
+	// "annotations" are all the annotation specified in
+	// "getSupportedAnnotationTypes()"
+	// "roundEnv" is the information about the current processing round
+	@Override
+	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        for (TypeElement annot : annotations) {
+		for (TypeElement annot : annotations) {
 
-            Set<? extends Element> annotatedElems = roundEnv
-                    .getElementsAnnotatedWith(annot);
+			Set<? extends Element> annotatedElems = roundEnv.getElementsAnnotatedWith(annot);
 
-            for (Element elem : annotatedElems) {
-                if (elem.getKind() != ElementKind.METHOD) {
-                    messager.printMessage(Kind.ERROR,
-                            "@StaticMethod only be used for method", elem);
-                } else {
-                    ExecutableElement method = (ExecutableElement) elem;
-                    Set<Modifier> modifiers = method.getModifiers();
+			for (Element elem : annotatedElems) {
+				if (elem.getKind() != ElementKind.METHOD) {
+					messager.printMessage(Kind.ERROR, "@StaticMethod only be used for method", elem);
+				} else {
+					ExecutableElement method = (ExecutableElement) elem;
+					Set<Modifier> modifiers = method.getModifiers();
 
-                    if (!modifiers.contains(Modifier.STATIC)) {
-                        messager.printMessage(Kind.ERROR,
-                                "@StaticMethod only be applied to static method",
-                                elem);
-                    }
-                }
-            }
-        }
+					if (!modifiers.contains(Modifier.STATIC)) {
+						messager.printMessage(Kind.ERROR, "@StaticMethod only be applied to static method", elem);
+					}
+				}
+			}
+		}
 
-        return true;
-    }
-
+		return true;
+	}
 
 	@Override
 	public Set<String> getSupportedAnnotationTypes() {
