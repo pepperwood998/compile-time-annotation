@@ -21,8 +21,11 @@ import javax.tools.Diagnostic.Kind;
 public class StaticMethodProcessor extends AbstractProcessor {
 
 	private Messager messager;
-	
-	private String methodNameTemplate = "^static.+$";
+
+	private final String METHOD_NAME_TEMPLATE = "^static.+$";
+	private final String ERR_MESSAGE_WRONG_TARGET = "@StaticMethod only be used for method";
+	private final String ERR_MESSAGE_NAMING_CONVENTION = "@StaticMethod requires method name to start with \"static\"";
+	private final String ERR_MESSAGE_STATIC_CONTEXT = "@StaticMethod only be applied to static method";
 
 	@Override
 	public synchronized void init(ProcessingEnvironment env) {
@@ -41,21 +44,20 @@ public class StaticMethodProcessor extends AbstractProcessor {
 
 			for (Element elem : annotatedElems) {
 				if (elem.getKind() != ElementKind.METHOD) {
-					messager.printMessage(Kind.ERROR, "@StaticMethod only be used for method", elem);
+					messager.printMessage(Kind.ERROR, ERR_MESSAGE_WRONG_TARGET, elem);
 				} else {
 					ExecutableElement method = (ExecutableElement) elem;
-					
+
 					Name name = method.getSimpleName();
-					Pattern pattern = Pattern.compile(methodNameTemplate);
+					Pattern pattern = Pattern.compile(METHOD_NAME_TEMPLATE);
 					Matcher matcher = pattern.matcher(name.toString());
-					if (!matcher.matches())
-					{
-						messager.printMessage(Kind.ERROR, "@StaticMethod requires method name to start with \"static\"", elem);
+					if (!matcher.matches()) {
+						messager.printMessage(Kind.ERROR, ERR_MESSAGE_NAMING_CONVENTION, elem);
 					}
-					
+
 					Set<Modifier> modifiers = method.getModifiers();
 					if (!modifiers.contains(Modifier.STATIC)) {
-						messager.printMessage(Kind.ERROR, "@StaticMethod only be applied to static method", elem);
+						messager.printMessage(Kind.ERROR, ERR_MESSAGE_STATIC_CONTEXT, elem);
 					}
 				}
 			}
