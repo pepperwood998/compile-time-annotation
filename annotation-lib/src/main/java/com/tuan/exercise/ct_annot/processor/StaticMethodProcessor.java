@@ -1,13 +1,12 @@
 package com.tuan.exercise.ct_annot.processor;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -16,8 +15,6 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 
-@SupportedAnnotationTypes("com.tuan.exercise.ct_annot.annotation.StaticMethod")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class StaticMethodProcessor extends AbstractProcessor {
 
     private Messager messager;
@@ -56,4 +53,19 @@ public class StaticMethodProcessor extends AbstractProcessor {
         return true;
     }
 
+
+	@Override
+	public Set<String> getSupportedAnnotationTypes() {
+
+		TreeSet<String> supportedAnnotationTypes = new TreeSet<String>();
+
+		supportedAnnotationTypes.add("com.tuan.exercise.ct_annot.annotation.StaticMethod");
+
+		return supportedAnnotationTypes;
+	}
+
+	@Override
+	public SourceVersion getSupportedSourceVersion() {
+		return SourceVersion.RELEASE_8;
+	}
 }
